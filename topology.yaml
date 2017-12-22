@@ -10,7 +10,7 @@
 # limitations under the License.
 
 name: Confluent Schema Registry
-description: A basic Confluent Schema Registry with all it's dependencies
+description: A basic Confluent Schema Registry
 
 node groups:
     nodes:

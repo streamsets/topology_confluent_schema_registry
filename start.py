@@ -13,9 +13,6 @@
 
 import json
 import logging
-import tempfile
-import yaml
-from socket import getfqdn, socket
 
 from clusterdock.models import Cluster, Node
 from clusterdock.utils import wait_for_condition
@@ -71,20 +68,22 @@ def main(args):
     cluster.start(args.network, pull_images=args.always_pull)
 
     # Create distributed zookeeper configuration
-    zookeeper_config = ('tickTime=2000\n'
-                        'dataDir=/zookeeper\n'
-                        'clientPort=2181\n'
-                        'initLimit=5\n'
-                        'syncLimit=2\n')
+    zookeeper_config = []
+    zookeeper_config.append('tickTime=2000')
+    zookeeper_config.append('dataDir=/zookeeper')
+    zookeeper_config.append('clientPort=2181')
+    zookeeper_config.append('initLimit=5')
+    zookeeper_config.append('syncLimit=2')
+
     for idx, node in enumerate(cluster):
-        zookeeper_config += 'server.{}={}:2888:3888\n'.format(idx, node.hostname)
+        zookeeper_config.append('server.{}={}:2888:3888'.format(idx, node.hostname))
 
     # Start all zookeepers
     for idx, node in enumerate(cluster):
         logger.info('Starting Zookeeper on node {}'.format(node.hostname))
         node.execute('mkdir -p /zookeeper')
         node.put_file('/zookeeper/myid', str(idx))
-        node.put_file('/zookeeper.properties', zookeeper_config)
+        node.put_file('/zookeeper.properties', '\n'.join(zookeeper_config))
         node.execute('/start_zookeeper &', detach=True)
 
     # Validate that Zookeepr is alive from each node
