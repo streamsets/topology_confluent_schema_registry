@@ -11,4 +11,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/confluent/bin/schema-registry-start /confluent/etc/schema-registry/schema-registry.properties > /logs/registry.log &
+/confluent/bin/schema-registry-start /confluent/etc/schema-registry/schema-registry.properties &> /logs/registry.log &

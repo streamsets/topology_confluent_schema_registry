@@ -11,4 +11,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/confluent/bin/kafka-server-start /kafka.properties > /logs/kafka.log &
+/confluent/bin/kafka-server-start /kafka.properties &> /logs/kafka.log &
